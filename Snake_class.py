@@ -13,13 +13,39 @@ class Node(): # Nodes of a Double Linked list
     
     def update_x_y(self): # This function is the velocity function which updates the x and y of the nodes.
         if self.vel_direction == 1: # go up
-            self.y -= SNAKE_SPEED
+
+            if self.y + SNAKE_NODE_SIDE > 0:
+                self.y -= SNAKE_SPEED
+            else: # Snake's node has gone off screen
+                # We have to move to snake's node to the bottom of the screen to show continuity in the screen
+                # Here self.y + SNAKE_NODE_SIDE <= 0
+                self.y = HEIGHT - SNAKE_NODE_SIDE
+
         if self.vel_direction == 2: # go down
-            self.y += SNAKE_SPEED
+
+            if self.y < HEIGHT:
+                self.y += SNAKE_SPEED
+            else: # Snake's node has gone off screen
+                # We have to move to snake's node to the top of the screen to show continuity in the screen
+                # Here self.y >= HEIGHT
+                self.y = 0
+
         if self.vel_direction == 3: # go left
-            self.x -= SNAKE_SPEED
+
+            if self.x + SNAKE_NODE_SIDE > 0:
+                self.x -= SNAKE_SPEED
+            else: # Snake's node has gone off screen
+                # We have to move to snake's node to the right of the screen to show continuity in the screen
+                # Here self.x + SNAKE_NODE_SIDE <= 0
+                self.x = WIDTH - SNAKE_NODE_SIDE
         if self.vel_direction == 4: # go right
-            self.x += SNAKE_SPEED
+
+            if self.x < WIDTH:
+                self.x += SNAKE_SPEED
+            else: # Snake's node has gone off screen
+                # We have to move to snake's node to the left of the screen to show continuity in the screen
+                # Here self.x >= WIDTH
+                self.x = 0
 
 class Snake(): # head of the Linked list
 
@@ -64,12 +90,6 @@ class Snake(): # head of the Linked list
             elif ptr.vel_direction == 4: # last node is moving towards right
                 node = Node(ptr.x - SNAKE_NODE_SIDE, ptr.y, 4, ptr, None) # Node is inserted
                 ptr.next = node
-
-
-        print("Node created")
-        print(id(node))
-
-
 
     def __len__(self):
         ptr = Snake()
