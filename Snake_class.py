@@ -1,5 +1,6 @@
 from constants import *
 import pygame
+import random
 
 class Node(): # Nodes of a Double Linked list
 
@@ -23,7 +24,7 @@ class Node(): # Nodes of a Double Linked list
 
         if self.vel_direction == 2: # go down
 
-            if self.y < HEIGHT:
+            if self.y + SNAKE_NODE_SIDE < HEIGHT:
                 self.y += SNAKE_SPEED
             else: # Snake's node has gone off screen
                 # We have to move to snake's node to the top of the screen to show continuity in the screen
@@ -40,7 +41,7 @@ class Node(): # Nodes of a Double Linked list
                 self.x = WIDTH - SNAKE_NODE_SIDE
         if self.vel_direction == 4: # go right
 
-            if self.x < WIDTH:
+            if self.x + SNAKE_NODE_SIDE < WIDTH:
                 self.x += SNAKE_SPEED
             else: # Snake's node has gone off screen
                 # We have to move to snake's node to the left of the screen to show continuity in the screen
@@ -56,6 +57,7 @@ class Snake(): # head of the Linked list
 
 
     def initialize_snake(self):
+        self.head = None
         for i in range(SNAKE_BIRTH_LENGTH):
             self.insert_node()
 
@@ -124,13 +126,45 @@ class Snake(): # head of the Linked list
                 ptr.change_value = 1 # change the value since vel_direction changed
                 ptr.prev.change_value = 0 # reset value to zero
             ptr = ptr.prev # move ptr backwards in the list
+    
 
+    def head_collision(self):
+        rect1 = pygame.Rect(self.head.x, self.head.y, SNAKE_NODE_SIDE, SNAKE_NODE_SIDE) # head node's rectangle
+        ptr = Snake()
+        ptr = self.head.next # Checking from the 2nd node
+        while ptr is not None:
+            if(rect1.colliderect(pygame.Rect(ptr.x, ptr.y, SNAKE_NODE_SIDE, SNAKE_NODE_SIDE))): 
+                return 1 # checking for head collision with body parts
+            ptr = ptr.next
+        return 0
 
-    def draw_snake(self, gameDisplay):
+    def food_spawn(self):
         ptr = Snake()
         ptr = self.head
-        while ptr is not None:
-            pygame.draw.rect(gameDisplay, WHITE, pygame.Rect(ptr.x, ptr.y, SNAKE_NODE_SIDE, SNAKE_NODE_SIDE), 2) # drawing node
-            pygame.draw.rect(gameDisplay, GREEN, pygame.Rect(ptr.x + 2, ptr.y + 2, SNAKE_NODE_SIDE - 6, SNAKE_NODE_SIDE - 6), 0)
-            ptr = ptr.next
-        pygame.display.update()
+        conditional = True
+        while conditional: # first loop
+            count = 1
+            x = random.randrange(0, WIDTH - SNAKE_NODE_SIDE + 1, SNAKE_NODE_SIDE)
+            y = random.randrange(0, HEIGHT - SNAKE_NODE_SIDE + 1, SNAKE_NODE_SIDE)
+
+            while ptr is not None: # second loop
+                if (x == ptr.x) and (y == ptr.y):
+                    count = 0
+                    break # breaks from the second loop
+                ptr = ptr.next
+
+            if count == 0:
+                continue # rerun the first loop
+            else:
+                # count is not zero => it satisfied all the conditions
+                return [x, y]
+
+    def food_eaten(self, snake_food): # if food gets eaten then the snake increases in size by 1 node
+        # returns true and false. And if true it increases the length of the snake by one node
+        rect1 = pygame.Rect(self.head.x, self.head.y, SNAKE_NODE_SIDE, SNAKE_NODE_SIDE) # since head eats the food
+        rect2 = pygame.Rect(snake_food[0], snake_food[1], SNAKE_NODE_SIDE, SNAKE_NODE_SIDE)
+        condition = rect1.colliderect(rect2)
+        if condition == True: # snake has eaten the food
+            # snake's length has to be increased
+            self.insert_node()
+        return condition
