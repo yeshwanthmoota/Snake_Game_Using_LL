@@ -95,7 +95,8 @@ def draw_display(snake, snake_food):
 def main():
     exit_code = 0
 
-    global SCORE, SCORE_VALUE
+    global SCORE
+    SCORE = 0
 
     clock = pygame.time.Clock()
     running = True
