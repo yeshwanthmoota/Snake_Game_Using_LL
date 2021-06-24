@@ -17,39 +17,57 @@ GAME_OVER = pygame.USEREVENT + 1 # When snake's head dashes with one of it's bod
 FOOD_EATEN = pygame.USEREVENT + 2 # When the snake eats the food
 
 
-SCORE_FONT = pygame.font.SysFont("comicsans", 50, bold = True)
+SCORE_FONT_1 = pygame.font.SysFont("monospace", 15, bold = True)
+SCORE_FONT_2 = pygame.font.SysFont("monospace", 12, bold = True)
 COUNTER_FONT = pygame.font.SysFont("Comic Sans MS", 50, bold = True)
 
 #----------------------code for working on terminal----------
 final_path = os.getcwd()
 path_list = final_path.split("\\")
 if path_list[-1] == "Snake_game" or  path_list[-1] == "Snake_game-master":
-    final_path = final_path + "\\" + "music_and_sounds" + "\\"
+    final_path = final_path + "\\"
 #----------------------code for working on terminal----------
 
 #----------------------code for working on vs code----------
 else:
-    final_path = os.path.dirname(__file__) + "\\" + "music_and_sounds" + "\\"
+    final_path = os.path.dirname(__file__) + "\\"
 #----------------------code for working on vs code----------
 
-BACKGROUND_MUSIC = pygame.mixer.Sound(final_path + "background_music.wav")
+
+BACKGROUND_MUSIC = pygame.mixer.Sound(final_path + "music_and_sounds" + "\\" + "background_music.wav")
 BACKGROUND_MUSIC.set_volume(0.5)
-FOOD_EATING_SOUND = pygame.mixer.Sound(final_path + "eating_sound.wav")
+FOOD_EATING_SOUND = pygame.mixer.Sound(final_path + "music_and_sounds" + "\\" + "eating_sound.wav")
 FOOD_EATING_SOUND.set_volume(1)
-GAME_TIMER = pygame.mixer.Sound(final_path + "game_timer.wav")
+GAME_TIMER = pygame.mixer.Sound(final_path  + "music_and_sounds" + "\\" + "game_timer.wav")
 GAME_TIMER.set_volume(0.5)
-GO_SOUND = pygame.mixer.Sound(final_path + "game_start.wav")
+GO_SOUND = pygame.mixer.Sound(final_path  + "music_and_sounds" + "\\" + "game_start.wav")
 GO_SOUND.set_volume(0.5)
-CHEERING_SOUND = pygame.mixer.Sound(final_path + "cheering.wav")
+CHEERING_SOUND = pygame.mixer.Sound(final_path  + "music_and_sounds" + "\\" + "cheering.wav")
 CHEERING_SOUND.set_volume(1)
 
 channel1 = pygame.mixer.Channel(0)
 channel2 = pygame.mixer.Channel(1)
 
-def draw_score_board():
-    gameDisplay.fill(BLACK)
 
-    score = SCORE_FONT.render("YOUR SCORE : {}".format(SCORE), 1, ORANGE)
+file1 = open(final_path + "high_score.txt", "r")
+x = file1.read()
+list1 = x.split(" = ")
+BEFORE_STATEMENT = list1[0]
+CURRENT_HIGH_SCORE = int(list1[1])
+file1.close()
+
+def draw_score_board():
+    global CURRENT_HIGH_SCORE
+    gameDisplay.fill(BLACK)
+    
+    if(SCORE >= CURRENT_HIGH_SCORE):
+        file1 = open(final_path + "high_score.txt", "w")
+        file1.write("{} = {}".format(BEFORE_STATEMENT, SCORE)) # updating the text file.
+        file1.close()
+        CURRENT_HIGH_SCORE = SCORE
+        score = SCORE_FONT_2.render("Congratulations! Your score = High_score = {}".format(SCORE), 1, ORANGE)
+    else:
+        score = SCORE_FONT_1.render("Your score = {} High score = {}".format(SCORE, CURRENT_HIGH_SCORE), 1, ORANGE)
 
     gameDisplay.blit(score,(WIDTH/2-(score.get_width())/2, HEIGHT/2 -(score.get_height())/2))
 
