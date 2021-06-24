@@ -26,13 +26,13 @@ ORANGE = (255, 120, 0)
 
 
 
-EASY = [800, 600]
-HARD = [400, 400]
+EASY = [800, 600, 12] # 7 is in seconds
+HARD = [400, 400, 7] # 12 is in seconds
 
 
 GAME_LEVEL = HARD
 WIDTH = GAME_LEVEL[0]
 HEIGHT = GAME_LEVEL[1]
-
+FOOD_MAX_TIME_LIMIT = GAME_LEVEL[2]
 
 SCORE = 0

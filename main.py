@@ -15,6 +15,7 @@ pygame.display.set_caption("Snake Mania")
 
 GAME_OVER = pygame.USEREVENT + 1 # When snake's head dashes with one of it's body parts.
 FOOD_EATEN = pygame.USEREVENT + 2 # When the snake eats the food
+FOOD_TIME_LIMIT_REACHED = pygame.USEREVENT + 3 # When the snake doesn't eat it's food in under 7 seconds
 
 
 SCORE_FONT_1 = pygame.font.SysFont("monospace", 15, bold = True)
@@ -87,7 +88,7 @@ def draw_timer(count):
 
 
 
-def draw_display(snake, snake_food):
+def draw_display(snake, snake_food, time_of_creation):
     gameDisplay.fill(BLACK)
     ptr = Snake_class.Snake()
     ptr = snake.head
@@ -98,9 +99,13 @@ def draw_display(snake, snake_food):
         pygame.draw.rect(gameDisplay, GREEN, pygame.Rect(ptr.x + 2, ptr.y + 2, SNAKE_NODE_SIDE - 6, SNAKE_NODE_SIDE - 6), 0)
         ptr = ptr.next
     condition = snake.food_eaten(snake_food)
+    time_present = time.time()
     if condition:# it doesn't draw the food if it is eaten.
             pygame.event.post(pygame.event.Event(FOOD_EATEN))
             channel2.play(FOOD_EATING_SOUND ,1, 200)
+    elif (time_present - time_of_creation) > FOOD_MAX_TIME_LIMIT:
+        # it doesn't draw the food if it isn't eaten in FOOD_MAX_TIME_LIMIT seconds
+        pygame.event.post(pygame.event.Event(FOOD_TIME_LIMIT_REACHED))
     else:
         # drawing the snake food if and only if the snake hasn't eaten the food
         x = snake_food[0]
@@ -136,7 +141,7 @@ def main():
     snake.initialize_snake()
 
     snake_food = snake.food_spawn() # First food the snake is going to eat
-
+    time_of_creation = time.time() # gives the time stamp of food creation
     while running: # Game loop
 
         clock.tick(FPS)
@@ -166,7 +171,13 @@ def main():
 
             if event.type == FOOD_EATEN:
                 SCORE += 10
-                snake_food = snake.food_spawn() 
+                snake_food = snake.food_spawn()
+                time_of_creation = time.time() # gives the timestamp of food creation
+                # passing in snake to avoid the food being respawn over the snake's body
+            
+            if event.type == FOOD_TIME_LIMIT_REACHED:
+                snake_food = snake.food_spawn()
+                time_of_creation = time.time() # gives the timestamp of food creation
                 # passing in snake to avoid the food being respawn over the snake's body
 
             if event.type == GAME_OVER:
@@ -180,7 +191,7 @@ def main():
         if snake.head_collision():
             pygame.event.post(pygame.event.Event(GAME_OVER))
         snake.snake_movement()
-        draw_display(snake, snake_food)
+        draw_display(snake, snake_food, time_of_creation)
     
     main()
 
