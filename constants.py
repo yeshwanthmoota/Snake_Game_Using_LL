@@ -1,8 +1,6 @@
 
 
-# Creating the game with no borderss
-WIDTH = 500
-HEIGHT = 300
+# Creating the game with no borders
 FPS = 8
 
 
