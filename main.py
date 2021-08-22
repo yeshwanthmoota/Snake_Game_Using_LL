@@ -24,26 +24,26 @@ COUNTER_FONT = pygame.font.SysFont("Comic Sans MS", 50, bold = True)
 
 #----------------------code for working on terminal----------
 final_path = os.getcwd()
-path_list = final_path.split("\\")
+path_list = final_path.split("/")
 if path_list[-1] == "Snake_game" or  path_list[-1] == "Snake_game-master":
-    final_path = final_path + "\\"
+    final_path = final_path + "/"
 #----------------------code for working on terminal----------
 
 #----------------------code for working on vs code----------
 else:
-    final_path = os.path.dirname(__file__) + "\\"
+    final_path = os.path.dirname(__file__) + "/"
 #----------------------code for working on vs code----------
 
 
-BACKGROUND_MUSIC = pygame.mixer.Sound(final_path + "music_and_sounds" + "\\" + "background_music.wav")
+BACKGROUND_MUSIC = pygame.mixer.Sound(final_path + "music_and_sounds" + "/" + "background_music.wav")
 BACKGROUND_MUSIC.set_volume(0.5)
-FOOD_EATING_SOUND = pygame.mixer.Sound(final_path + "music_and_sounds" + "\\" + "eating_sound.wav")
+FOOD_EATING_SOUND = pygame.mixer.Sound(final_path + "music_and_sounds" + "/" + "eating_sound.wav")
 FOOD_EATING_SOUND.set_volume(1)
-GAME_TIMER = pygame.mixer.Sound(final_path  + "music_and_sounds" + "\\" + "game_timer.wav")
+GAME_TIMER = pygame.mixer.Sound(final_path  + "music_and_sounds" + "/" + "game_timer.wav")
 GAME_TIMER.set_volume(0.5)
-GO_SOUND = pygame.mixer.Sound(final_path  + "music_and_sounds" + "\\" + "game_start.wav")
+GO_SOUND = pygame.mixer.Sound(final_path  + "music_and_sounds" + "/" + "game_start.wav")
 GO_SOUND.set_volume(0.5)
-CHEERING_SOUND = pygame.mixer.Sound(final_path  + "music_and_sounds" + "\\" + "cheering.wav")
+CHEERING_SOUND = pygame.mixer.Sound(final_path  + "music_and_sounds" + "/" + "cheering.wav")
 CHEERING_SOUND.set_volume(1)
 
 channel1 = pygame.mixer.Channel(0)

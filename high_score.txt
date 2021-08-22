@@ -1,1 +1,1 @@
-High Score = 0
+High Score = 220
